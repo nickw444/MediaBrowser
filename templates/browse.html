@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-right">
+    <a href="../" class="btn btn-primary">Up One Level</a>
+    <a href="?download=1" class="btn btn-danger">Download Entire Directory</a>
+</div>
+<hr />
+
+<style>
+    .thumbnail {
+        padding:10px;
+    }
+    .clickable-thumb a:hover{
+        text-decoration: none;
+    }
+    .clickable-thumb a:active,
+    .clickable-thumb a:focus {
+        color: #337ab7;
+        text-decoration: none;;
+    }
+</style>
+
+    {% for row in items['dirs']|batch(4) %}
+    <div class="row">
+        {% for item in row %}
+            <div class="clickable-thumb col-xs-6 col-sm-3 col-lg-3">
+                <a href="{{ url_for('browse', id=id, path=item[1]) }}">
+                    <div class="thumbnail">
+                        <i class="fa fa-folder-o"></i>
+                        {{ item[0] }}
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+{# <ul class="list-group">
+    {% for item in items['dirs'] %}
+        <li class="list-group-item">
+            <i class="fa fa-folder-o"></i>
+            <a href="{{ url_for('browse', id=id, path=item[1]) }}">{{ item[0] }}</a>
+        </li>
+    {% endfor %}
+</ul> #}
+<ul class="list-group">
+    {% for item in items['files'] %}
+        <li class="list-group-item">
+            <i class="fa fa-file"></i>
+            <a href="{{ url_for('browse', id=id, path=item[1]) }}">{{ item[0] }}</a>
+            <div class="pull-right">
+                <a href="{{ url_for('browse', id=id, path=item[1], download=1) }}" class="btn btn-xs btn-success"><i class="fa fa-arrow-down"></i> Download</a>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
