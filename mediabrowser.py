@@ -1,23 +1,10 @@
 import os
 from flask import Flask, render_template, send_file, request, after_this_request, redirect, url_for, safe_join
 import re
+
+from config import MAX_FOLDER_DL_SIZE_BYTES, IGNORE_FILES, ROOT_PATHS
+
 app = Flask(__name__)
-
-MAX_FOLDER_DL_SIZE_BYTES = 2 * 1000 * 1000 * 1000 # GB to Bytes
-
-class Item(object):
-    def __init__(self, path, name):
-        self.path = path
-        self.name = name
-
-
-
-root_paths = [
-    Item('/', 'Macintosh HD'),
-    Item('/Volumes/iData/', 'iData')
-]
-
-ignorefiles = r'^\..*$'
 
 def get_size(start_path):
     total_size = 0
@@ -39,13 +26,13 @@ def zipdir(path, ziph):
 
 @app.route('/')
 def index():
-    return render_template('index.html', items=root_paths)
+    return render_template('index.html', items=ROOT_PATHS)
 
 @app.route('/<int:id>/<path:path>')
 @app.route('/<int:id>/')
 def browse(id, path=''):
     path = path.replace('../', '')
-    real_path = safe_join(root_paths[id].path, path)
+    real_path = safe_join(ROOT_PATHS[id].path, path)
 
     items = {
         'dirs': [],
@@ -84,7 +71,7 @@ def browse(id, path=''):
             return "DL"
         else:
             for f in os.listdir(real_path):
-                if not re.match(ignorefiles, f):
+                if not re.match(IGNORE_FILES, f):
                     
                     if os.path.isdir(os.path.join(real_path, f)):
                         item = (f, os.path.join(path, f) + '/')
