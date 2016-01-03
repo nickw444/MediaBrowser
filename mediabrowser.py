@@ -88,8 +88,8 @@ if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == 'meinheld':
         from meinheld import server
-        server.listen(("0.0.0.0", 8082))
+        server.listen(("0.0.0.0", 8080))
         server.run(app)
     else:
         app.debug = True
-        app.run(host="0.0.0.0", port=8082)
+        app.run(host="0.0.0.0", port=8080)
